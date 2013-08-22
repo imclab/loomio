@@ -1,4 +1,6 @@
 class Email < ActiveRecord::Base
+  scope :unsent, -> { where(sent_at: nil) }
+  scope :all, -> { unscoped }
 
   def render_body
     options = {

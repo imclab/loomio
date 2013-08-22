@@ -1,4 +1,6 @@
 ActiveAdmin.register Email do
+  scope :unsent, default: true
+  scope :all
   actions :index, :show, :edit, :update, :destroy
 
   index do
@@ -18,6 +20,7 @@ ActiveAdmin.register Email do
   batch_action :send do |email_ids|
     Email.where(id: email_ids).each do |email|
       EmailTemplateMailer.delay.basic(email)
+      email.update_attribute(:sent_at, Time.zone.now)
     end
     redirect_to admin_emails_path
   end
