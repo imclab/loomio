@@ -4,7 +4,7 @@ $(function() {
   var fileSize;
   var fileSizeText;
 
- $('.direct-upload').each(function() {
+ $('#fileupload').each(function() {
 
     var form = $(this)
 

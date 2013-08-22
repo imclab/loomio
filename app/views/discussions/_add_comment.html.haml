@@ -22,7 +22,7 @@
           = markdown_img(@uses_markdown)
         = render 'markdown_setting', target: current_user
 
-  %form(action="https://#{ENV['AWS_ATTACHMENTS_BUCKET']}.s3.amazonaws.com" method="post" enctype="multipart/form-data" class='direct-upload')
+  %form(action="https://#{ENV['AWS_ATTACHMENTS_BUCKET']}.s3.amazonaws.com" method="post" enctype="multipart/form-data" id='fileupload')
     =hidden_field_tag :key
     =hidden_field_tag :AWSAccessKeyId, ENV['AWS_ACCESS_KEY_ID']
     =hidden_field_tag :acl, 'public-read'
