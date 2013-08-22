@@ -78,7 +78,6 @@ $(function() {
         })
 
         $('#post-new-comment').removeAttr('disabled')
-
       },
       done: function (event, data) {
         $('.attachment-uploader').hide();
@@ -106,12 +105,18 @@ $(function() {
   $(document).on('click', '#upload-attachment', function (){
     // #fix! - this needs disabling while there is another upload going.
     // this binds the click of attachment icon to the hidden choose file button
-    console.log(jqXHR)
+    // console.log(jqXHR)
     // console.log(jqXHR.readyState)
-    // if (jqXHR != nil && jqXHR.readyState == 4) {
-    //   $('input:file').trigger('click');
-    // }
-    $('input:file').trigger('click');
+    if (jqXHR) {
+      if (jqXHR.readyState != 1) {
+        $('input:file').trigger('click');
+      }
+    }
+    else {
+      $('input:file').trigger('click');
+    }
+    // ORIGINAL :
+    // $('input:file').trigger('click');
     return false;
   })
 });
