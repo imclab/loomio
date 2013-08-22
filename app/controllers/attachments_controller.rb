@@ -1,7 +1,5 @@
 class AttachmentsController < ApplicationController
   before_filter :authenticate_user!
-  # def index
-  # end
 
   def sign
     render json: {
@@ -39,7 +37,7 @@ class AttachmentsController < ApplicationController
       {
         expiration: 30.minutes.from_now.utc.strftime('%Y-%m-%dT%H:%M:%S.000Z'),
         conditions: [
-          { bucket: ENV['S3_BUCKET'] },
+          { bucket: ENV['AWS_ATTACHMENTS_BUCKET'] },
           { acl: 'public-read' },
           [ "starts-with", "$key", "uploads/" ],
           { success_action_status: '201' },
