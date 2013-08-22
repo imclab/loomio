@@ -1,14 +1,34 @@
+def print_month_totals(model)
+  if model == "users"
+    collection = User.where('created_at > ?', 6.months.ago).group_by{|u| u.created_at.month}
+  elsif model == "groups"
+    collection = Group.where('parent_id IS NULL AND created_at > ?', 6.months.ago).group_by{|g| g.created_at.month}
+  end
+  counts = {}
+  collection.each_pair do |k, v|
+    counts[k] = v.count
+  end
+  month_totals = []
+  counts.each_pair do |k,v|
+    month_name = Date::MONTHNAMES[k]
+    month_totals << "#{month_name}: #{v}"
+  end
+  month_totals.join("<br>")
+end
+
 ActiveAdmin::Dashboards.build do
 
   section "Groups", :priority => 1 do
     h1 { Group.count }
     div { "New today: #{Group.where('parent_id IS NULL AND created_at >= ?', 24.hours.ago).count}"}
-    div { "New this week: #{Group.where('parent_id IS NULL AND created_at >= ?', 1.week.ago).count}"}
+    div { print_month_totals("groups").html_safe}
     div { link_to "See all groups", admin_groups_path }
   end
 
   section "Users", :priority => 2 do
     h1 { User.count }
+    div { "New today: #{User.where('created_at >= ?', 24.hours.ago).count}"}
+    div { print_month_totals("users").html_safe}
     div { link_to "See all users", admin_users_path }
   end
 
