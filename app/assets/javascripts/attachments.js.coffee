@@ -1,4 +1,10 @@
 jQuery ->
+
+  $(document).on 'click', '#add-attachment-icon', ->
+    $('input:file').trigger('click')
+
+
+
   $('#fileupload').fileupload
     add: (e, data) ->
       types = /(\.|\/)(exe)$/i
@@ -8,7 +14,10 @@ jQuery ->
       else
         data.context = $(tmpl("template-upload", file))
         $('#fileupload').append(data.context)
+        $('#fileupload').data('filesize', data.files[0].size)
+        $('#fileupload').data('filename', data.files[0].name)
         data.submit()
+
     
     progress: (e, data) ->
       if data.context
@@ -22,6 +31,8 @@ jQuery ->
       to = $('#fileupload').data('post')
       content = {}
       content[$('#fileupload').data('as')] = domain + path
+      content['attachment[filesize]'] = $('#fileupload').data('filesize')
+      content['attachment[filename]'] = $('#fileupload').data('filename')
       $.post(to, content)
       data.context.remove() if data.context # remove progress bar
     
@@ -29,3 +40,6 @@ jQuery ->
       alert("#{data.files[0].name} failed to upload.")
       console.log("Upload failed:")
       console.log(data)
+
+
+

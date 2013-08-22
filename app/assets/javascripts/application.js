@@ -45,5 +45,6 @@
 //= require inbox
 //= require searches
 //= require jquery-fileupload/basic
-//= require s3uploader
+//= require jquery-fileupload/vendor/tmpl
+//= require attachments
 //= require subscriptions

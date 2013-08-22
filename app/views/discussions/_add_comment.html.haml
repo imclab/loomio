@@ -16,18 +16,26 @@
       = hidden_field_tag 'uses_markdown', @uses_markdown, {id: 'global-uses-markdown'}
       = submit_tag t(:comment_form_submit_button), class: "btn btn-small submit", id: 'post-new-comment', :data => {:disable_with => t(:comment_form_submit_button)}
     .comment-toolbar
-      .attachment-icon#upload-attachment
+      .attachment-icon#add-attachment-icon
       .dropdown#comment-markdown-dropdown.global-markdown-setting
         %a.dropdown-toggle{href:'#comment-markdown-dropdown', id:'comment-markdown-dropdown-link', 'data-toggle'=> 'dropdown'}
           = markdown_img(@uses_markdown)
         = render 'markdown_setting', target: current_user
 
-  %form(action="https://#{ENV['AWS_ATTACHMENTS_BUCKET']}.s3.amazonaws.com" method="post" enctype="multipart/form-data" id='fileupload')
-    =hidden_field_tag :key
-    =hidden_field_tag :AWSAccessKeyId, ENV['AWS_ACCESS_KEY_ID']
-    =hidden_field_tag :acl, 'public-read'
-    =hidden_field_tag :policy
-    =hidden_field_tag :signature
-    =hidden_field_tag :success_action_status, '201'
-    =hidden_field_tag :"Content-Type", "*"
-    %input#file-upload-field{type: :file, name: :file}
+  / %form(action="https://#{ENV['AWS_ATTACHMENTS_BUCKET']}.s3.amazonaws.com" method="post" enctype="multipart/form-data" id='fileupload')
+  /   =hidden_field_tag :key
+  /   =hidden_field_tag :AWSAccessKeyId, ENV['AWS_ACCESS_KEY_ID']
+  /   =hidden_field_tag :acl, 'public-read'
+  /   =hidden_field_tag :policy
+  /   =hidden_field_tag :signature
+  /   =hidden_field_tag :success_action_status, '201'
+  /   =hidden_field_tag :"Content-Type", "*"
+  /   %input#file-upload-field{type: :file, name: :file}
+  = s3_uploader_form post: attachments_url, as: "attachment[location]" do
+    = file_field_tag :file, multiple: true
+
+  %script#template-upload{type: "text/x-tmpl"}
+    .upload
+      {%=o.name%}
+      .progress
+        .bar{style: "width: 0%"}
