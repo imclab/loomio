@@ -19,6 +19,7 @@ ActiveAdmin.register Email do
     Email.where(id: email_ids).each do |email|
       EmailTemplateMailer.delay.basic(email)
     end
+    redirect_to admin_emails_path
   end
 
   controller do

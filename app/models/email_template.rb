@@ -22,7 +22,7 @@ class EmailTemplate < ActiveRecord::Base
 
     out_text = in_text.dup
 
-    in_text.scan(/{{(\S+)}}/) do |match|
+    in_text.scan(/{{([^}]+)}}/) do |match|
       code = match.first
       begin
         replacement = eval(code)

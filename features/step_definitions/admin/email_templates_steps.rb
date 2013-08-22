@@ -116,7 +116,9 @@ When(/^I send the email$/) do
 end
 
 Then(/^the email should be sent to the recipient$/) do
-  open_email(@recipient.email, :with_subject => "We reckon you need to start a discussion in your group")
-  current_email.default_part_body.to_s.should include("We're really pleased you started a loomio group")
+  last_email = ActionMailer::Base.deliveries.last
+  last_email.to.should include @recipient.email
+  last_email.subject.should == "We reckon you need to start a discussion in your group"
+  last_email.body.parts.first.to_s.should =~ /We\'re really pleased you started a loomio group/
 end
 
