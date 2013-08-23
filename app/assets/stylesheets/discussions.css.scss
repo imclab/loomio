@@ -40,7 +40,7 @@ body.discussions.show {
       padding: 2px 2px 2px 0px;
     }
     .attachment-uploader {
-      display: none;
+      // display: none;
       background: #EBEBEB;
       padding: 4px 0;
       .progress {
@@ -55,10 +55,9 @@ body.discussions.show {
         white-space: nowrap;
         width: 185px;
       }
-      .uploading-filename, .progress, div, button {
+      // .uploading-filename, .progress, div, button {
 
-
-      }
+      // }
     }
     .attachment-success { padding: 4px 0; }
   }

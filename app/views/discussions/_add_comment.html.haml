@@ -5,14 +5,9 @@
       .form-container
         = text_area_tag 'comment', "", id: 'new-comment', placeholder: t(:comment_form_placeholder)
         #attachment-container
-          .attachments
-          .attachment-uploader
-            .uploading-filename
-              filename
-            %button.close &times;
-            .progress.active
-              .bar
-            .attachment-too-large-error-message.hidden=t(:"attachment.error.too_large")
+          / .attachments
+          / .attachment-uploader
+
       = hidden_field_tag 'uses_markdown', @uses_markdown, {id: 'global-uses-markdown'}
       = submit_tag t(:comment_form_submit_button), class: "btn btn-small submit", id: 'post-new-comment', :data => {:disable_with => t(:comment_form_submit_button)}
     .comment-toolbar
@@ -22,20 +17,25 @@
           = markdown_img(@uses_markdown)
         = render 'markdown_setting', target: current_user
 
-  / %form(action="https://#{ENV['AWS_ATTACHMENTS_BUCKET']}.s3.amazonaws.com" method="post" enctype="multipart/form-data" id='fileupload')
-  /   =hidden_field_tag :key
-  /   =hidden_field_tag :AWSAccessKeyId, ENV['AWS_ACCESS_KEY_ID']
-  /   =hidden_field_tag :acl, 'public-read'
-  /   =hidden_field_tag :policy
-  /   =hidden_field_tag :signature
-  /   =hidden_field_tag :success_action_status, '201'
-  /   =hidden_field_tag :"Content-Type", "*"
-  /   %input#file-upload-field{type: :file, name: :file}
+
+
   = s3_uploader_form post: attachments_url, as: "attachment[location]" do
     = file_field_tag :file, multiple: true
 
   %script#template-upload{type: "text/x-tmpl"}
-    .upload
-      {%=o.name%}
-      .progress
-        .bar{style: "width: 0%"}
+    .attachment-uploader
+      .uploading-filename
+        {%=o.name%}
+      %button.close &times;
+      .progress.active
+        .bar
+
+  %script#template-upload--attached{type: "text/x-tmpl"}
+    .attachments
+      .attachment-success
+        = link_to "{%=o.name%}", "{%=o.location%}", target: "_blank"
+        ({%= (parseInt(o.size) / (1024*1024)).toFixed(2) + " MB" %})
+        %button.close#cancel-attachment &times;
+
+  %script#template-comment--attachment{type: "text/x-tmpl"}
+    %input{type: 'hidden', id: 'comment-attachment-{%=o.id%}', name: "attachments[]", value: '{%=o.id%}'}
